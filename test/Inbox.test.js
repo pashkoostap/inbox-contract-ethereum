@@ -2,7 +2,12 @@ const assert = require('assert');
 const ganache = require('ganache-cli');
 const Web3 = require('web3');
 
-const web3 = new Web3(ganache.provider());
+if (typeof web3 !== 'undefined') {
+  web3 = new Web3(web3.currentProvider);
+} else {
+  // set the provider you want from Web3.providers
+  web3 = new Web3(new Web3.providers.HttpProvider('http://127.0.0.1:7545'));
+}
 const { interface, bytecode } = require('../compile');
 let accounts = [];
 let inbox;
@@ -22,6 +27,6 @@ beforeEach(async () => {
 
 describe('Inbox', () => {
   it('should deploy the contract', () => {
-    console.log(inbox);
+    assert.ok(inbox.options.address);
   });
 });
