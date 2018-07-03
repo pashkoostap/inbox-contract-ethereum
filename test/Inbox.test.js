@@ -13,7 +13,7 @@ const defaultMessage = 'Hello World!';
 let accounts = [];
 let inbox;
 
-beforeEach(async () => {
+before(async () => {
   // Get a list of all accounts
   accounts = await web3.eth.getAccounts();
 
@@ -35,5 +35,14 @@ describe('Inbox', () => {
     const message = await inbox.methods.message().call();
 
     assert.equal(message, defaultMessage);
+  });
+
+  it('can change the message', async () => {
+    const newMessage = 'New message';
+
+    await inbox.methods.setMessage(newMessage).send({ from: accounts[1] });
+    const changedMessage = await inbox.methods.message().call();
+
+    assert.equal(changedMessage, newMessage);
   });
 });
